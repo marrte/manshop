@@ -17,6 +17,9 @@ const store = new Vuex.Store({
         a(a) {
             a = "123";
             console.log(a);
+        },
+        b() {
+            console.log("2o");
         }
     }
 });
