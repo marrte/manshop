@@ -1,7 +1,9 @@
 <template>
   <div>
     <div
-      style="display:flex;justify-content: space-between;background:#ccc;color:#333;font-weight:800;font-size:24px"
+      style="display:flex;justify-content: space-between;background:#ccc;color:#333;font-weight:800;font-size:24px;overflow:auto"
+      infinite-scroll-distance="30px"
+      infinite-scroll-immediate="true"
     >
       <span>男士购,男士专用</span>
       <span style="display:inline-block;padding:0 10px">
@@ -24,8 +26,8 @@
         <img :src="item.image" alt="" style="width:100% ;height:100%" />
       </el-carousel-item>
     </el-carousel>
-    <div class="wrapper" ref="wrapper">
-      <div v-for="item in data" :key="item.title">
+    <div class="infinite-list" style="overflow:auto">
+      <div v-for="item in data" :key="item.title" class="infinite-list-item">
         <h3
           style="padding:0 0 5px 20px;color:#ff0000;font-size:22px;margin:10px 0px"
         >
@@ -71,7 +73,6 @@
 </template>
 
 <script>
-import BScroll from "better-scroll";
 export default {
   name: "home",
   data() {
@@ -99,9 +100,6 @@ export default {
       this.data = item.data.datas.slice(1).map((item) => {
         return item.goods;
       });
-    });
-    this.$nextTick(() => {
-      this.scroll = new BScroll(this.$refs.wrapper, {});
     });
   },
   methods: {

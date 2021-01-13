@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <ul>
       <li v-for="item in menu" :key="item.name">
         <router-link

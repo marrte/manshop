@@ -8,17 +8,15 @@
         class="man-name"
         style="font-size:16px;width:500px;font-weight:bolder"
       >
-        {{ this.xiang.goods_info.goods_name }}
+        {{ this.xiang.goods_name }}
       </div>
       <div
         class="man-price"
         style="display:flex; justify-content: space-between;font-size:24px"
       >
-        <span style="color:orange"
-          ><b>￥</b>{{ this.xiang.goods_info.goods_price }}</span
-        >
+        <span style="color:orange"><b>￥</b>{{ this.xiang.goods_price }}</span>
         <span style="font-size:16px"
-          >销量:{{ this.xiang.goods_info.goods_salenum }}件</span
+          >销量:{{ this.xiang.goods_salenum }}件</span
         >
       </div>
       <div style="padding:10px 0px;color:gray">
@@ -27,12 +25,20 @@
       </div>
       <div style="color:blue;font-weight:bolder">已选颜色:green</div>
       <div style="padding:10px 0">商品评价: <span>好评率100%</span></div>
+      <div style="display:flex ; justify-content: space-between;padding:0px;">
+        <el-button type="success" style="font-size:20px" @click="addlist"
+          >添加购物车</el-button
+        >
+        <el-button type="warning" style="font-size:20px" @click="buy"
+          >立即购买</el-button
+        >
+      </div>
     </div>
     <div class="bottom">
       <div
         style="text-align:center;color:green;font-weight:bolder;font-size:25px"
       >
-        {{ this.xiang.store_info.store_name }}
+        {{ this.xiang.store_name }}
       </div>
       <div style="color:red;margin-bottom:10px;">描述相符100</div>
     </div>
@@ -60,10 +66,38 @@ export default {
   name: "goods-message",
   data() {
     return {
+      num: 0,
       xiang: {},
     };
   },
   methods: {
+    buy() {
+      this.addlist();
+      this.$router.push({ name: "cart" });
+    },
+    addlist() {
+      let {
+        goods_image: image,
+        goods_name: name,
+        goods_price: price,
+        goods_id: id,
+      } = this.xiang;
+      // let { goodlist } = this.$store.state;
+      // console.log(goodlist);
+      // let current = goodlist.filter((item) => item.id === id)[0];
+      // if (current) {
+      //   this.$store.commit("changeQty", { id, qty: current.qty + 1 });
+      // } else {
+      let goods = {
+        id,
+        qty: 1,
+        name,
+        price: (price * 0.8).toFixed(2),
+        image,
+      };
+      this.$store.commit("addlist", goods);
+      // }
+    },
     get_id() {
       this.id = this.$route.params && this.$route.params.id;
     },
@@ -85,25 +119,27 @@ export default {
         //   this.xiang = item.data.datas.map((item) => {
         //     return item.xiang;
         //   });
+        let { data } = item;
+        let { datas } = data;
+        // console.log(datas);
+        let { goods_image, goods_info, goods_commend_list, store_info } = datas;
         let {
-          data: { datas },
-        } = item;
-        console.log(datas);
-        let {
-          goods_image,
-          goods_info,
-          goods_evaluate_info,
-          goods_hair_info,
-          store_info,
-          goods_commend_list,
-        } = datas;
+          goods_name,
+          goods_price,
+          goods_promotion_price,
+          goods_salenum,
+          goods_id,
+        } = goods_info;
+        let { store_name } = store_info;
         this.xiang = {
           goods_image,
-          goods_info,
-          goods_hair_info,
-          goods_evaluate_info,
-          store_info,
+          goods_name,
+          goods_price,
+          goods_id,
+          goods_promotion_price,
+          goods_salenum,
           goods_commend_list,
+          store_name,
         };
         // console.log(this.xiang);
       });
